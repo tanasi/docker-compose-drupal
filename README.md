@@ -1,75 +1,5 @@
 # Drupal 8 Docker Compose Development
 
-[![pipeline status](https://gitlab.com/mog33/docker-compose-drupal/badges/master/pipeline.svg)](https://gitlab.com/mog33/docker-compose-drupal/commits/master)
-
-- [Requirements](#requirements)
-- [Description](#description)
-  - [What's this?](#whats-this)
-  - [Services included](#services-included)
-    - [Database management](#database-management)
-- [Quick demo (Ubuntu)](#quick-demo-ubuntu)
-- [Installation and configuration](#installation-and-configuration)
-  - [Project installation](#project-installation)
-  - [Option 1: existing Drupal 8 project](#option-1-existing-drupal-8-project)
-    - [Copy codebase](#copy-codebase)
-    - [Import database](#import-database)
-    - [Launch the stack](#launch-the-stack)
-    - [Access the minimal dashboard](#access-the-minimal-dashboard)
-  - [Option 2: setup Vanilla Drupal 8 with Composer](#option-2-setup-vanilla-drupal-8-with-composer)
-    - [Code download](#code-download)
-    - [Launch the stack](#launch-the-stack-1)
-    - [Install Drupal 8](#install-drupal-8)
-    - [Access your Drupal 8](#access-your-drupal-8)
-- [Daily usage](#daily-usage)
-  - [Add some modules](#add-some-modules)
-  - [Enable some modules](#enable-some-modules)
-  - [Run a command on the server](#run-a-command-on-the-server)
-  - [Access the server with bash](#access-the-server-with-bash)
-- [Reset the stack](#reset-the-stack)
-  - [Destroy containers](#destroy-containers)
-  - [Remove your persistent data (and lost everything!)](#remove-your-persistent-data-and-lost-everything)
-- [Linux helpers](#linux-helpers)
-- [Upgrade](#upgrade)
-- [Suggested tools](#suggested-tools)
-- [Troubleshooting](#troubleshooting)
-  - [General problem](#general-problem)
-  - [Port 80](#port-80)
-  - [Windows](#windows)
-
-**Full** Linux support. Tested daily on Ubuntu 16+.
-
-**Windows** support is **very, very limited** due to Docker for [Windows permissions problems](https://github.com/docker/for-win/issues/1829) and no privileged support :(
-
-**Mac** support is **very limited** due to the fact that I don't have a Mac!
-
-## Requirements
-
-- [Docker engine 19+](https://docs.docker.com/install)
-- [Docker compose 1.26+](https://docs.docker.com/compose/install)
-
-**Recommended**
-
-- [Composer](https://getcomposer.org)
-
-## Description
-
-### What's this?
-
-Based mostly on [Docker official images](https://hub.docker.com/search/?type=image&image_filter=official) and lightweight [Alpine Linux](https://alpinelinux.org/) to ease maintenance and size.
-
-This stack is meant to be used as a single [Drupal 8](https://www.drupal.org/8) project only with quick setup, run and destroy workflow.
-
-The purpose is to give flexibility in management, try to rely as much as possible on official tools to avoid any new custom patterns.
-
-This stack is not a one line command but more for users with a good dev-op level and knowledge on each technology used.
-
-See other great project for a Docker based development
-
-- [Lando](https://docs.devwithlando.io/tutorials/drupal8.html)
-- [Docksal](https://docksal.io/)
-- [ddev](https://github.com/drud/ddev)
-- [docker4drupal](https://github.com/wodby/docker4drupal)
-
 ### Services included
 
 _Every service is optional as declared in the yml file._
@@ -90,41 +20,9 @@ _Every service is optional as declared in the yml file._
 
 - [Adminer](https://www.adminer.org)
 
-## Quick demo (Ubuntu)
-
-Get this project
-
-```bash
-wget https://gitlab.com/mog33/docker-compose-drupal/-/archive/master/docker-compose-drupal-master.tar.gz
-tar -xzf docker-compose-drupal-master.tar.gz
-cd docker-compose-drupal-master
-```
-
-Install this stack with minimal services, download and install Drupal 8 with
-profile [Demo Umami](https://www.drupal.org/project/demo_umami)
-
-```bash
-make demo
-```
-
 ## Installation and configuration
 
 ### Project installation
-
-Grab this project
-
-```bash
-wget https://gitlab.com/mog33/docker-compose-drupal/-/archive/master/docker-compose-drupal-master.tar.gz
-tar -xzf docker-compose-drupal-master.tar.gz
-cd docker-compose-drupal-master
-```
-
-Create your docker compose file from template
-
-```bash
-cp docker-compose.tpl.yml docker-compose.yml
-cp default.env .env
-```
 
 _Optional:_ Edit configuration
 
@@ -200,14 +98,18 @@ Setup a new Drupal 8 based on a Composer project.
 
 Based on [Drupal 8 template](https://github.com/drupal-composer/drupal-project), include [Drush](http://www.drush.org) and [Drupal console](https://drupalconsole.com/), using [Composer](https://getcomposer.org) locally:
 
-```bash
-composer create-project drupal-composer/drupal-project:8.x-dev drupal --stability dev --no-interaction
-```
 
 #### Launch the stack
 
 ```bash
 docker-compose up --build -d
+```
+
+#### Get into container and run composer to bring drupal into localhost = drupal dir outside
+```bash
+sudo docker exec -it dcd-php /bin/bash
+cd /var/www/
+composer create-project drupal-composer/drupal-project:8.x-dev localhost --stability dev --no-interaction
 ```
 
 #### Install Drupal 8
